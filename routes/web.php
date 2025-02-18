@@ -1,4 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-require __DIR__ . '/auth.php';
+Route::get('/login', function () {
+    return Inertia::render('Auth/Login');
+});
+
+require __DIR__ . '/api.php';
