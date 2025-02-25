@@ -29,7 +29,7 @@ const emit = defineEmits(["update:modelValue"])
         :type="type"
         :placeholder="placeholder"
         :value="modelValue"
-        class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:outline-hidden"
         />
         <p
         v-if="errorMessage"
