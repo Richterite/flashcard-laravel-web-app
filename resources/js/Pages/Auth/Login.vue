@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import BaseInput from '@/Components/BaseInput.vue';
-import SubmitButton from '@/Components/SubmitButton.vue';
+import BaseInput from '@/components/BaseInput.vue';
+import SubmitButton from '@/components/BaseButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
