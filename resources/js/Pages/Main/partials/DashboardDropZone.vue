@@ -3,24 +3,31 @@
 <script setup lang="ts">
 import DropZone from '@/components/DropZone.vue';
 import FilePreview from '@/components/FilePreview.vue';
-import useFileList from '@/compositions/file-list';
+import { useFileListStores } from '@/stores/file-stores';
+import { storeToRefs } from 'pinia';
 
 
-const {addFiles, files, removeFile} = useFileList()
+const fileStore = useFileListStores()
+const {files} = storeToRefs(fileStore)
 function onInputChange(e: Event){
     const target = e.target as HTMLInputElement;
     if (target.files){
-        addFiles(target.files)
+        fileStore.addFiles(target.files)
     }
     target.value = '';
 }
+
+
+const {fileFormat = ''} = defineProps<{
+    fileFormat?: string
+}>();
 
 
 </script>
 
 <template>
     <div id="drop-zone">
-        <DropZone class="drop-area rounded-lg" @files-dropped="addFiles" #default="{ dropZoneActive}">
+        <DropZone class="drop-area rounded-lg" @files-dropped="fileStore.addFiles" #default="{ dropZoneActive}">
             <label for="file-input">
                 <span v-if="dropZoneActive">
                     <span class="text-xl">Drop it Here</span>
@@ -32,10 +39,10 @@ function onInputChange(e: Event){
                         or <strong><em>click here</em></strong> to select files
                     </span>
                 </span>
-                <input type="file" id="file-input" multiple  @change="onInputChange"/>
+                <input type="file" id="file-input" :accept="fileFormat" @change="onInputChange"/>
             </label>
             <ul v-show="files.length" class="flex flex-wrap gap-3 mt-5">
-                <FilePreview v-for="file of files" :file="file" :key="file.id" tag="li" @remove="removeFile"/>
+                <FilePreview v-for="file of files" :file="file" :key="file.id" tag="li" @remove="fileStore.removeFile"/>
             </ul>
         </DropZone>
     </div>

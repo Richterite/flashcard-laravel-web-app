@@ -2,25 +2,31 @@
 import FlipCard from '@/components/FlipCard.vue';
 import ThemeSwtcher from '@/components/ThemeSwtcher.vue';
 import NavigationLayout from '@/Layouts/NavigationLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { ref, useId } from 'vue';
 import DashboardDropZone from './partials/DashboardDropZone.vue';
 import { Button } from '@/components/ui/button';
+import { useFileListStores } from '@/stores/file-stores';
+import { storeToRefs } from 'pinia';
 
 
 
 
-const files = ref();
-const timeLimit = ref<number>(0);
 
 
-const id = useId()
-const fileChangeHandler = (e: Event) => {
-    const target = e.target as HTMLInputElement;
-    if (target.files){
-        files.value = target.files[0];
-    }
+const fileStore = useFileListStores()
+const {files} = storeToRefs(fileStore)
+
+const form = useForm({
+    files: fileStore.files[0].file
+});
+
+
+function onSubmitHandler() {
+    form.post(route('card.create'));
 }
+
+const acceptedFormat = ['.csv', '.xls', '.xlsx']
 
 </script>
 
@@ -33,7 +39,7 @@ const fileChangeHandler = (e: Event) => {
         </template>
         <template #nav-left>
             <h1 class="text-2xl font-bold">
-                Flascard
+                Flashcard
             </h1>
         </template>
         <template #default>
@@ -57,10 +63,10 @@ const fileChangeHandler = (e: Event) => {
                         </p>
                         <div class="mt-14 flex flex-col gap-3">
                             <!-- <h1 class="font-bold text-5xl">Design Here:</h1> -->
-                            <form class="max-w-full">
+                            <form class="max-w-full" @submit.prevent="">
                                 <div class="grid  items-center gap-4">
                                     <h1 class="font-bold text-2xl">Generate your Flashcard!</h1>
-                                    <DashboardDropZone />
+                                    <DashboardDropZone :file-format="acceptedFormat.toString()"/>
                                     <!-- <Input :id="id" class="dark:file:text-white file:text-black " type="file" @change="fileChangeHandler" /> -->
                                     <Button type="submit" variant="destructive" class="ml-auto bg-primary text-primary-foreground shadow hover:bg-primary/90 ">
                                         Generate
@@ -68,6 +74,9 @@ const fileChangeHandler = (e: Event) => {
                                 </div>
      
                             </form>
+                            <div v-for="file of files">
+                                {{ file.file.name }}
+                            </div>
 
                         </div>
                     </div>

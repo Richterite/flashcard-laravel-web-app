@@ -34,7 +34,7 @@ export interface UploadableFileInterface {
     status?: 'idle' | 'uploading' | 'uploaded' | 'error' | null,
 }
 
-class UploadableFile implements UploadableFileInterface {
+export class UploadableFile implements UploadableFileInterface {
     file: File;
     id: string;
     url: string;
